@@ -1,31 +1,34 @@
 <template>
   <v-container>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :items-per-page="10"
-      class="elevation-1"
-      disable-sort
-    >
-      <template v-slot:header.name="{ header }">
-        <v-chip color="red" dark @click="activeModal('name')">{{ header.text }}</v-chip>
-      </template>
-      <template v-slot:header.calories="{ header }">
-        <v-chip color="orange" dark @click="activeModal('calories')">{{ header.text }}</v-chip>
-      </template>
-      <template v-slot:header.fat="{ header }">
-        <v-chip color="yellow" dark @click="activeModal('fat')">{{ header.text }}</v-chip>
-      </template>
-      <template v-slot:header.carbs="{ header }">
-        <v-chip color="green" dark @click="activeModal('carbs')">{{ header.text }}</v-chip>
-      </template>
-      <template v-slot:header.protein="{ header }">
-        <v-chip color="purple" dark @click="activeModal('protein')">{{ header.text }}</v-chip>
-      </template>
-      <template v-slot:header.iron="{ header }">
-        <v-chip color="blue" dark @click="activeModal('iron')">{{ header.text }}</v-chip>
-      </template>
-    </v-data-table>
+    <v-card>
+      <v-card-title>datepicker and stuffs here</v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="data"
+        :items-per-page="10"
+        loading="true"
+        disable-sort
+      >
+        <template v-slot:header.time="{ header }">
+          <v-chip dark>{{ header.text }}</v-chip>
+        </template>
+        <template v-slot:header.flow_pressure="{ header }">
+          <v-chip dark @click="activeModal('Áp lực lưu lượng')">{{ header.text }}</v-chip>
+        </template>
+        <template v-slot:header.pump_water_in="{ header }">
+          <v-chip dark @click="activeModal('Nước bơm vào')">{{ header.text }}</v-chip>
+        </template>
+        <template v-slot:header.pump_water_out="{ header }">
+          <v-chip dark @click="activeModal('Nước bơm ra')">{{ header.text }}</v-chip>
+        </template>
+        <template v-slot:header.sum_of_water_in="{ header }">
+          <v-chip dark @click="activeModal('Tổng nước vào')">{{ header.text }}</v-chip>
+        </template>
+        <template v-slot:header.sum_of_water_out="{ header }">
+          <v-chip dark @click="activeModal('Tổng nước ra')">{{ header.text }}</v-chip>
+        </template>
+      </v-data-table>
+    </v-card>
 
     <div>
       <v-dialog id="mainModal" v-model="dialog">
@@ -68,17 +71,14 @@
 
             <div class="col-md-8">
               <v-card>
-                <v-card-title>
-                  Bảng dữ liệu
-                </v-card-title>
+                <v-card-title>Bảng dữ liệu</v-card-title>
                 <v-data-table
                   :headers="headers"
-                  :items="desserts"
+                  :items="data"
                   :items-per-page="5"
                   class="elevation-1"
                   dense
-                >
-                </v-data-table>
+                ></v-data-table>
               </v-card>
             </div>
 
@@ -98,8 +98,28 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ReportPressure",
+  created: function() {
+    let that = this;
+    let data = { time: "21/08/2019" };
+    axios({
+      url: "record/fakeflowpressure",
+      data: data,
+      headers: { "Content-Type": "application/json" },
+      method: "POST"
+    })
+      .then(function(res) {
+        that.$data.data = res.data;
+        return res;
+      })
+      .catch(function(err) {
+        console.log(err);
+        return err;
+      });
+  },
 
   data() {
     return {
@@ -107,99 +127,43 @@ export default {
       target: "",
       headers: [
         {
-          text: "Dessert (100g serving)",
+          text: "Thời gian",
           align: "left",
-          sortable: false,
-          value: "name"
-        },
-        { text: "Calories", value: "calories" },
-        { text: "Fat (g)", value: "fat" },
-        { text: "Carbs (g)", value: "carbs" },
-        { text: "Protein (g)", value: "protein" },
-        { text: "Iron (%)", value: "iron" }
-      ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%"
+          width: 100,
+          value: "time"
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%"
+          text: "Áp lực lưu lượng",
+          align: "center",
+          width: 150,
+          value: "flow_pressure"
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: "7%"
+          text: "Nước bơm vào",
+          align: "center",
+          width: 150,
+          value: "pump_water_in"
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: "8%"
+          text: "Nước bơm ra",
+          align: "center",
+          width: 150,
+          value: "pump_water_out"
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
+          text: "Tổng nước vào",
+          align: "center",
+          width: 150,
+          value: "sum_of_water_in"
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
+          text: "Tổng nước ra",
+          align: "center",
+          width: 150,
+          value: "sum_of_water_out"
         }
-      ]
+      ],
+      data: []
     };
   },
   methods: {
