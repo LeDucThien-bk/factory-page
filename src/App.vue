@@ -3,6 +3,7 @@
     <v-app-bar app color="#173D6A" height="56px">
       <v-app-bar-nav-icon id="navbarText" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title id="navbarText">Tổng quan</v-toolbar-title>
+                
       <v-spacer></v-spacer>
     </v-app-bar>
 
