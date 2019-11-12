@@ -1,22 +1,33 @@
 <template>
 <v-container>
-    <v-data-table :headers="headers" :items="desserts" :items-per-page="10" class="elevation-1" disable-sort>
+    <div class="col-md-4">
+        <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date" transition="scale-transition" offset-y min-width="290px">
+            <template v-slot:activator="{ on }">
+                <v-text-field v-model="date" label="Chọn ngày hiển thị" prepend-icon="event" readonly v-on="on"></v-text-field>
+            </template>
+            <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+            </v-date-picker>
+        </v-menu>
+    </div>
+    <v-data-table :headers="headers" :items="tabledata" :items-per-page="10" class="elevation-1" disable-sort>
         <template v-slot:header.time="{ header }">
             <v-chip @click="activeModal('Thời gian')">{{ header.text }}</v-chip>
         </template>
-        <template v-slot:header.powerconsume="{ header }">
+        <template v-slot:header.power_wasted="{ header }">
             <v-chip @click="activeModal('Điện năng tiêu thụ')">{{ header.text }}</v-chip>
         </template>
-        <template v-slot:header.chemistryconsume="{ header }">
+        <template v-slot:header.chemiscals_wasted="{ header }">
             <v-chip @click="activeModal('Hóa chất tiêu thụ')">{{ header.text }}</v-chip>
         </template>
-        <template v-slot:header.loss="{ header }">
+        <template v-slot:header.running_wasted="{ header }">
             <v-chip @click="activeModal('Thất thoát vận hành')">{{ header.text }}</v-chip>
         </template>
-        <template v-slot:header.quality="{ header }">
+        <template v-slot:header.water_quality="{ header }">
             <v-chip @click="activeModal('Chất lượng nước')">{{ header.text }}</v-chip>
         </template>
-        <template v-slot:header.chemistrysystem="{ header }">
+        <template v-slot:header.chemiscals_system="{ header }">
             <v-chip @click="activeModal('Hệ thống hóa chất')">{{ header.text }}</v-chip>
         </template>
     </v-data-table>
@@ -41,13 +52,14 @@
                             <v-card-title>
                                 Bảng dữ liệu
                             </v-card-title>
-                            <v-data-table :headers="headers" :items="desserts" :items-per-page="5" class="elevation-1" dense>
+                            <v-data-table :headers="headers" :items="tabledata" :items-per-page="5" class="elevation-1" dense>
                             </v-data-table>
                         </v-card>
                     </div>
                 </div>
                 <div class="container-fluid" id="chart">
-                  <apexchart id="apex-chart" type=line height=280 :options="chartOptions" :series="series"></apexchart></div>
+                    <apexchart id="apex-chart" type=line height=280 :options="chartOptions" :series="series"></apexchart>
+                </div>
                 <v-divider></v-divider>
 
                 <v-card-actions>
@@ -62,95 +74,98 @@
 
 <script>
 import VueApexCharts from "vue-apexcharts"
+import axios from 'axios'
+
 export default {
     name: 'ReportDetail',
-components: {
+    components: {
         apexchart: VueApexCharts
     },
     data: () => ({
-      series: [{
-                data: [
-                    [1327359600000, 30.95],
-                    [1327446000000, 31.34],
-                    [1327532400000, 31.18],
-                    [1327618800000, 31.05],
-                    [1327878000000, 31.00],
-                    [1327964400000, 30.95],
-                    [1328050800000, 31.24]
-                ]
-            }],
-            chartOptions: {
-                annotations: {
-                    yaxis: [{
-                        y: "0",
-                        borderColor: '#999',
-                        label: {
-                            show: true,
-                            text: 'Thời gian',
-                            style: {
-                                color: "#fff",
-                                background: '#00E396'
-                            }
-                        }
-                    }],
-                    xaxis: [{
-                        x: "00:00:00",
-                        yAxisIndex: 0,
-                        borderColor: '#999',
-                        label: {
-                            show: true,
-                            text: 'Tần số',
-                            style: {
-                                color: "#fff",
-                                background: '#775DD0',
-                            },
-                        }
-                    }]
-                },
-                yaxis: {
-                    tooltip: {
-                        enabled: true,
-                    }
-                },
-                xaxis: {
-                    type: 'datetime',
-                },
-                chart: {
-                    toolbar: {
+        series: [{
+            data: [
+                [1327359600000, 30.95],
+                [1327446000000, 31.34],
+                [1327532400000, 31.18],
+                [1327618800000, 31.05],
+                [1327878000000, 31.00],
+                [1327964400000, 30.95],
+                [1328050800000, 31.24]
+            ]
+        }],
+        date: "",
+        chartOptions: {
+            annotations: {
+                yaxis: [{
+                    y: "0",
+                    borderColor: '#999',
+                    label: {
                         show: true,
-                        tools: {
-                            download: false,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: false,
-                            reset: true | '<img src="/static/icons/reset.png" width="20">',
-                            customIcons: []
-                        },
-                        autoSelected: 'zoom'
-                    },
-                },
-                markers: {
-                    size: 0,
-                    style: 'hollow',
-                },
-
-                stroke: {
-                    show: true,
-                    curve: 'straight',
-                    lineCap: 'butt',
-                    width: 2,
-                    dashArray: 0,
-                },
-                colors: ['#fc0303', "#f0fc03", '#52fc03', '#0c0d0c', '#03dbfc', '#0362fc', '#7303fc', '#e703fc', '#15154f', '#6f804d'],
-
-                tooltip: {
-                    x: {
-                        format: 'dd MMM yyyy HH:mm:ss'
+                        text: 'Thời gian',
+                        style: {
+                            color: "#fff",
+                            background: '#00E396'
+                        }
                     }
+                }],
+                xaxis: [{
+                    x: "00:00:00",
+                    yAxisIndex: 0,
+                    borderColor: '#999',
+                    label: {
+                        show: true,
+                        text: 'Tần số',
+                        style: {
+                            color: "#fff",
+                            background: '#775DD0',
+                        },
+                    }
+                }]
+            },
+            yaxis: {
+                tooltip: {
+                    enabled: true,
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+            },
+            chart: {
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: false,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: false,
+                        reset: true | '<img src="/static/icons/reset.png" width="20">',
+                        customIcons: []
+                    },
+                    autoSelected: 'zoom'
                 },
             },
+            markers: {
+                size: 0,
+                style: 'hollow',
+            },
+
+            stroke: {
+                show: true,
+                curve: 'straight',
+                lineCap: 'butt',
+                width: 2,
+                dashArray: 0,
+            },
+            colors: ['#fc0303', "#f0fc03", '#52fc03', '#0c0d0c', '#03dbfc', '#0362fc', '#7303fc', '#e703fc', '#15154f', '#6f804d'],
+
+            tooltip: {
+                x: {
+                    format: 'dd MMM yyyy HH:mm:ss'
+                }
+            },
+        },
         dialog: false,
         target: "",
         headers: [{
@@ -161,42 +176,71 @@ components: {
             {
                 text: "Điện năng tiêu thụ (W)",
                 align: "center",
-                value: "powerconsume"
+                value: "power_wasted"
             },
             {
                 text: "Hóa chất tiêu thụ",
                 align: "center",
-                value: "chemistryconsume"
+                value: "chemiscals_wasted"
             },
             {
                 text: "Thất thoát vận hành",
                 align: "center",
-                value: "loss"
+                value: "running_wasted"
             },
             {
                 text: "Chất lượng nước",
                 align: "center",
-                value: "quality"
+                value: "water_quality"
             },
             {
                 text: "Hệ thống hóa chất",
                 align: "center",
-                value: "chemistrysystem"
+                value: "chemiscals_system"
             },
         ],
-        desserts: [{
-            time: "00:01:00",
-            powerconsume: "1000",
-            chemistryconsume: "1500",
-            loss: "300",
-            quality: "BT",
-            chemistrysystem: "957",
-        }],
+        tabledata: [],
     }),
+    mounted() {
+        this.$data.date = new Date()
+        this.$data.date.setTime(this.$data.date.getTime() - 3600 * 1000 * 24);
+        this.loadData();
+    },
     methods: {
         activeModal(target) {
             this.$data.target = target;
             this.$data.dialog = true;
+        },
+        loadData: function () {
+            let that= this
+            var data = '{' + '"' + "time" + '"' + ":" + '"' + that.$data.date.getDate() +
+                "/" +
+                (parseInt(that.$data.date.getMonth()) + 1) +
+                "/" +
+                that.$data.date.getFullYear() + '"' +
+                '}'
+            console.log(data)
+            that.$data.tabledata = []
+            axios({
+                url: "record/fakerunningservice",
+                data: data,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "POST"
+            }).then(function (res) {
+                if (res.status == 204) {
+                    alert("Không có dữ liệu hiển thị")
+                } else {
+                    console.log(res.data)
+                    that.$data.tabledata = res.data
+                }
+            }).catch(function (err) {
+                console.log(err);
+                return err;
+
+            })
+
         }
     }
 };
