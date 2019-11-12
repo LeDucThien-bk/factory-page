@@ -13,12 +13,12 @@
 
       <!-- Hard-coded list, should be fixed later -->
       <v-list dark>
-        <v-list-item link>
+        <v-list-item to="/factoryOverwatch">
           <v-list-item-icon>
             <v-icon>account_balance</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title @click="redirectFactory()">Giám sát nhà máy</v-list-item-title>
+            <v-list-item-title>Giám sát nhà máy</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -27,24 +27,24 @@
             <v-list-item-title>Báo cáo - Biểu đồ</v-list-item-title>
           </template>
 
-          <v-list-item link>
+          <v-list-item to="/reportPressure">
             <v-list-item-content>
-              <v-list-item-title @click="redirectPressure()">Áp lực lưu lượng</v-list-item-title>
+              <v-list-item-title>Áp lực lưu lượng</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item to="/reportDetail">
             <v-list-item-content>
-              <v-list-item-title @click="redirectDetail()">Chi tiết vận hành</v-list-item-title>
+              <v-list-item-title>Chi tiết vận hành</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
 
-        <v-list-item link>
+        <v-list-item to="/deviceSetting">
           <v-list-item-icon>
             <v-icon>build</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title @click="redirectSetting()">Cấu hình thiết bị</v-list-item-title>
+            <v-list-item-title >Cấu hình thiết bị</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -85,18 +85,6 @@ export default {
     };
   },
   methods: {
-    redirectFactory() {
-      this.$router.push({ path: "/factoryOverwatch" });
-    },
-    redirectSetting() {
-      this.$router.push({ path: "/deviceSetting" });
-    },
-    redirectPressure() {
-      this.$router.push({ path: "/reportPressure" });
-    },
-    redirectDetail() {
-      this.$router.push({ path: "/reportDetail" });
-    }
   }
 };
 </script>
