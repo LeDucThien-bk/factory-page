@@ -13,95 +13,40 @@
           <v-chip dark>{{ header.text }}</v-chip>
         </template>
         <template v-slot:header.flow_pressure="{ header }">
-          <v-chip dark @click="activeModal('Áp lực lưu lượng')">{{ header.text }}</v-chip>
+          <v-chip dark @click="activeModal('Áp lực lưu lượng', 'flow_pressure')">{{ header.text }}</v-chip>
         </template>
         <template v-slot:header.pump_water_in="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm vào')">{{ header.text }}</v-chip>
+          <v-chip dark @click="activeModal('Nước bơm vào', 'pump_water_in')">{{ header.text }}</v-chip>
         </template>
         <template v-slot:header.pump_water_out="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm ra')">{{ header.text }}</v-chip>
+          <v-chip dark @click="activeModal('Nước bơm ra', 'pump_water_out')">{{ header.text }}</v-chip>
         </template>
         <template v-slot:header.sum_of_water_in="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước vào')">{{ header.text }}</v-chip>
+          <v-chip dark @click="activeModal('Tổng nước vào', 'sum_of_water_in')">{{ header.text }}</v-chip>
         </template>
         <template v-slot:header.sum_of_water_out="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước ra')">{{ header.text }}</v-chip>
+          <v-chip dark @click="activeModal('Tổng nước ra', 'sum_of_water_out')">{{ header.text }}</v-chip>
         </template>
       </v-data-table>
     </v-card>
 
-    <div>
-      <v-dialog id="mainModal" v-model="dialog">
-        <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>{{ target }}</v-card-title>
-          <div class="row">
-            <div class="col-md-3" id="infoSector">
-              <v-card>
-                <v-card-title>Thông tin chi tiết</v-card-title>
-                <v-text-field
-                  label="ID Thiết bị"
-                  value="Text here"
-                  outlined
-                  readonly
-                  style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
-                ></v-text-field>
-                <v-text-field
-                  label="Khu vực"
-                  value="Text here"
-                  outlined
-                  readonly
-                  style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
-                ></v-text-field>
-                <v-text-field
-                  label="Giá trị tối đa"
-                  value="Text here"
-                  outlined
-                  readonly
-                  style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
-                ></v-text-field>
-                <v-text-field
-                  label="Trung bình"
-                  value="Text here"
-                  outlined
-                  readonly
-                  style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
-                ></v-text-field>
-              </v-card>
-            </div>
-
-            <div class="col-md-8">
-              <v-card>
-                <v-card-title>Bảng dữ liệu</v-card-title>
-                <v-data-table
-                  :headers="headers"
-                  :items="data"
-                  :items-per-page="5"
-                  class="elevation-1"
-                  dense
-                ></v-data-table>
-              </v-card>
-            </div>
-
-            <div class="col-md-11" style="background-color:yellow">adsa</div>
-          </div>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="red" text @click="dialog = false">Đóng</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+    <DetailModal
+      v-bind:dialogControl="dialog"
+      v-bind:info="info"
+      v-bind:dataTable="modalData"
+    ></DetailModal>
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
+import DetailModal from "./DetailModal"
 
 export default {
   name: "ReportPressure",
+  components: {
+    DetailModal
+  },
   created: function() {
     let that = this;
     let data = { time: "21/08/2019" };
@@ -123,8 +68,12 @@ export default {
 
   data() {
     return {
-      dialog: false,
-      target: "",
+      dialog: 0,
+      info: {
+        deviceID: "51",
+        area: "51",
+        name: ""
+      },
       headers: [
         {
           text: "Thời gian",
@@ -163,20 +112,28 @@ export default {
           value: "sum_of_water_out"
         }
       ],
-      data: []
+      data: [],
+      modalData: []
     };
   },
   methods: {
-    activeModal(target) {
-      this.$data.target = target;
-      this.$data.dialog = true;
+    activeModal(name, target) {
+      let tempData = this.$data.data;
+      let that = this;
+      var temp = {};
+      var previous = tempData[0][target];
+      that.$data.modalData = [];
+      this.$data.info.name = name;
+      tempData.forEach(element => {
+        temp.time = element.time;
+        temp.value = element[target];
+        temp.diff = element[target] - previous;
+        previous = element[target];
+        that.$data.modalData.push(temp);
+        temp = {};
+      });
+      this.$data.dialog += 1;
     }
   }
 };
 </script>
-
-<style scoped>
-#infoSector {
-  margin-left: 3%;
-}
-</style>
