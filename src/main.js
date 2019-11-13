@@ -5,11 +5,16 @@ import vuetify from './plugins/vuetify';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import routes from "./config/routes";
 
+
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = "http://nnt.aquasoft.vn:7000/api/"
+
 Vue.use(VueRouter);
 Vue.config.productionTip = false
 
