@@ -152,6 +152,8 @@ export default {
         },
         loadDataModal(){
           let that = this
+          that.$data.info.sum = ""
+            that.$data.info.average = ""
           let data= {
             time: that.$data.date,
             fieldname: that.$data.target
