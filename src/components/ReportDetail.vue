@@ -26,23 +26,23 @@
         loading="true"
         disable-sort
       >
-        <template v-slot:header.time="{ header }">
+        <!-- <template v-slot:header.time="{ header }">
           <v-chip dark>{{ header.text }}</v-chip>
-        </template>
+        </template> -->
         <template v-slot:header.power_wasted="{ header }">
-          <v-chip dark @click="activeModal('Điện năng tiêu thụ', 'power_wasted')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Điện năng tiêu thụ', 'power_wasted')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.chemiscals_wasted="{ header }">
-          <v-chip dark @click="activeModal('Hóa chất tiêu thụ', 'chemiscals_wasted')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Hóa chất tiêu thụ', 'chemiscals_wasted')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.running_wasted="{ header }">
-          <v-chip dark @click="activeModal('Thất thoát vận hành', 'running_wasted')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Thất thoát vận hành', 'running_wasted')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.water_quality="{ header }">
-          <v-chip dark @click="activeModal('Chất lượng nước', 'water_quality')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Chất lượng nước', 'water_quality')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.chemiscals_system="{ header }">
-          <v-chip dark @click="activeModal('Hệ thống hóa chất', 'chemiscals_system')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Hệ thống hóa chất', 'chemiscals_system')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -82,7 +82,7 @@ export default {
           value: "time"
         },
         {
-          text: "Điện năng tiêu thụ (W)",
+          text: "Điện năng tiêu thụ",
           align: "center",
           width: 150,
           value: "power_wasted"

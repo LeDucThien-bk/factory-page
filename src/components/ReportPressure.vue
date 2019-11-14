@@ -26,23 +26,23 @@
         loading="true"
         disable-sort
       >
-        <template v-slot:header.time="{ header }">
+        <!-- <template v-slot:header.time="{ header }">
           <v-chip dark>{{ header.text }}</v-chip>
-        </template>
+        </template> -->
         <template v-slot:header.flow_pressure="{ header }">
-          <v-chip dark @click="activeModal('Áp lực lưu lượng', 'flow_pressure')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Áp lực lưu lượng', 'flow_pressure')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.pump_water_in="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm vào', 'pump_water_in')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm vào', 'pump_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.pump_water_out="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm ra', 'pump_water_out')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm ra', 'pump_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.sum_of_water_in="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước vào', 'sum_of_water_in')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước vào', 'sum_of_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.sum_of_water_out="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước ra', 'sum_of_water_out')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước ra', 'sum_of_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
       </v-data-table>
     </v-card>
