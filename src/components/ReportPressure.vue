@@ -1,7 +1,24 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>datepicker and stuffs here</v-card-title>
+      <v-card flat id="menu">
+        <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="date"
+            label="Chọn ngày"
+            prepend-icon="event"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+      </v-menu>
+      </v-card>
       <v-data-table
         :headers="headers"
         :items="data"
@@ -30,44 +47,27 @@
       </v-data-table>
     </v-card>
 
-    <DetailModal
-      v-bind:dialogControl="dialog"
-      v-bind:info="info"
-      v-bind:dataTable="modalData"
-    ></DetailModal>
+    <DetailModal v-bind:dialogControl="dialog" v-bind:info="info" v-bind:dataTable="modalData" v-bind:date="date"></DetailModal>
   </v-container>
 </template>
 
 <script>
 import axios from "axios";
-import DetailModal from "./DetailModal"
+import DetailModal from "./DetailModal";
 
 export default {
   name: "ReportPressure",
   components: {
     DetailModal
   },
-  created: function() {
-    let that = this;
-    let data = { time: "21/08/2019" };
-    axios({
-      url: "record/fakeflowpressure",
-      data: data,
-      headers: { "Content-Type": "application/json" },
-      method: "POST"
-    })
-      .then(function(res) {
-        that.$data.data = res.data;
-        return res;
-      })
-      .catch(function(err) {
-        console.log(err);
-        return err;
-      });
+  mounted: function() {
+    this.loadData();
   },
 
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
       dialog: 0,
       info: {
         deviceID: "51",
@@ -116,6 +116,11 @@ export default {
       modalData: []
     };
   },
+  watch: {
+    date: function() {
+      this.loadData();
+    }
+  },
   methods: {
     activeModal(name, target) {
       let tempData = this.$data.data;
@@ -133,7 +138,33 @@ export default {
         temp = {};
       });
       this.$data.dialog += 1;
+    },
+    loadData() {
+      let that = this;
+      let data = { time: that.$data.date };
+      axios({
+        url: "record/fakeflowpressure",
+        data: data,
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+      })
+        .then(function(res) {
+          that.$data.data = res.data;
+          return res;
+        })
+        .catch(function(err) {
+          console.log(err);
+          return err;
+        });
     }
   }
 };
 </script>
+
+<style scoped>
+#menu {
+  padding-top: 10px;
+  margin-left: 10px;
+  max-width: 150px;
+}
+</style>
