@@ -46,6 +46,7 @@
               :items="dataTable"
               :items-per-page="5"
               class="elevation-1"
+              disable-sort
               dense
             >
               <template v-slot:item.diff="{ item }">
@@ -93,6 +94,7 @@ export default {
   watch: {
     dialogControl: function(newValue) {
       let that = this;
+      that.$data.headers[1].text = that.info.name;
       if (newValue) {
         that.$data.dialog = true;
         setTimeout(function() {
