@@ -2,7 +2,7 @@
   <v-container>
     <v-row dense class="input1" v-for="item in items" :key="item">
       <v-col cols="12" md="3">
-        <v-text-field class="name-input" v-model="item.name" label="Tên giá trị" readonly></v-text-field>
+        <v-text-field dense class="name-input" v-model="item.name" label="Tên giá trị" readonly></v-text-field>
       </v-col>
 
       <v-col cols="12" md="4">
@@ -11,6 +11,7 @@
           v-model="item.sqlEntry"
           :rules="nameRules"
           label="Tên trường dữ liệu SQL"
+          dense
           required
         ></v-text-field>
       </v-col>
@@ -21,6 +22,7 @@
           v-model="item.unit"
           :rules="nameRules"
           label="Đơn vị"
+          dense
           required
         ></v-text-field>
       </v-col>
@@ -97,7 +99,7 @@ export default {
   }),
   methods: {
     sendData: function() {
-      alert('lul');
+      alert("lul");
     }
   }
 };
