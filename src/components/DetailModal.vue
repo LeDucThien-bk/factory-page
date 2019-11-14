@@ -2,7 +2,7 @@
 <template>
   <v-dialog id="mainModal" v-model="dialog">
     <v-card style="overflow-x: hidden;">
-      <v-card-title class="headline grey lighten-2" primary-title>{{ info.name }}</v-card-title>
+      <v-card-title class="headline grey lighten-2" primary-title>{{ info.name }}  {{ date }}</v-card-title>
       <div class="row">
         <div class="col-md-5" id="infoSector">
           <v-card>
@@ -236,6 +236,7 @@ export default {
   height: 40vh;
   margin-left: 15px;
   color: black;
+  margin-bottom: 10px;
 }
 
 #legend {
