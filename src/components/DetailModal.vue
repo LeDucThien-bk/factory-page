@@ -12,6 +12,7 @@
               :value="info.deviceID"
               outlined
               readonly
+              dense
               style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
@@ -19,6 +20,7 @@
               :value="info.area"
               outlined
               readonly
+              dense
               style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
@@ -26,6 +28,7 @@
               value="Text here"
               outlined
               readonly
+              dense
               style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
@@ -33,6 +36,7 @@
               value="Text here"
               outlined
               readonly
+              dense
               style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
             ></v-text-field>
           </v-card>
@@ -40,7 +44,7 @@
 
         <div class="col-md-6">
           <v-card>
-            <v-card-title>Bảng dữ liệu</v-card-title>
+            <!-- <v-card-title>Bảng dữ liệu</v-card-title> -->
             <v-data-table
               :headers="headers"
               :items="dataTable"
@@ -241,7 +245,7 @@ export default {
 
 #legend {
   color: black;
-  height: 5vh;
+  height: 3vh;
   display: inline-block;
   display: table;
   margin: 0 auto;

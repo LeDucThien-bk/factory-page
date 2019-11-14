@@ -1,16 +1,12 @@
 <template>
-  <v-container>
-    <iframe id="screen" src="https://192.168.11.182/" importance="high"></iframe>
-  </v-container>
+  <iframe id="screen" src="https://factory.aquasoft.vn/" importance="high"></iframe>
 </template>
 
 <script>
 export default {
-  name: 'FactoryOverwatch',
+  name: "FactoryOverwatch",
 
-  data: () => ({
-    
-  }),
+  data: () => ({})
 };
 </script>
 <style scoped>
@@ -19,7 +15,7 @@ export default {
   width: 100%;
   z-index: 2;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 </style>
