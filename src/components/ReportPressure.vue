@@ -1,7 +1,24 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>datepicker and stuffs here</v-card-title>
+      <v-card flat id="menu">
+        <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="date"
+            label="Chọn ngày"
+            prepend-icon="event"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+      </v-menu>
+      </v-card>
       <v-data-table
         :headers="headers"
         :items="data"
@@ -9,101 +26,54 @@
         loading="true"
         disable-sort
       >
-        <template v-slot:header.time="{ header }">
+        <!-- <template v-slot:header.time="{ header }">
           <v-chip dark>{{ header.text }}</v-chip>
-        </template>
+        </template> -->
         <template v-slot:header.flow_pressure="{ header }">
-          <v-chip dark @click="activeModal('Áp lực lưu lượng')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Áp lực lưu lượng', 'flow_pressure')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.pump_water_in="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm vào')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm vào', 'pump_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.pump_water_out="{ header }">
-          <v-chip dark @click="activeModal('Nước bơm ra')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm ra', 'pump_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.sum_of_water_in="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước vào')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước vào', 'sum_of_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
         <template v-slot:header.sum_of_water_out="{ header }">
-          <v-chip dark @click="activeModal('Tổng nước ra')">{{ header.text }}</v-chip>
+          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước ra', 'sum_of_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
         </template>
       </v-data-table>
     </v-card>
 
-    <div>
-        <v-dialog id="mainModal" v-model="dialog">
-            <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>{{ target }}</v-card-title>
-                <div class="row">
-                    <div class="col-md-3" id="infoSector">
-                        <v-card>
-                            <v-card-title>Thông tin chi tiết</v-card-title>
-                            <v-text-field label="ID Thiết bị" value="Text here" outlined readonly style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"></v-text-field>
-                            <v-text-field label="Khu vực" value="Text here" outlined readonly style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"></v-text-field>
-                            <v-text-field label="Giá trị tối đa" value="Text here" outlined readonly style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"></v-text-field>
-                            <v-text-field label="Trung bình" value="Text here" outlined readonly style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"></v-text-field>
-                        </v-card>
-                    </div>
-
-            <div class="col-md-8">
-              <v-card>
-                <v-card-title>Bảng dữ liệu</v-card-title>
-                <v-data-table
-                  :headers="headers"
-                  :items="data"
-                  :items-per-page="5"
-                  class="elevation-1"
-                  dense
-                ></v-data-table>
-              </v-card>
-            </div>
-
-                </div>
-                <div class="container-fluid" id="chart">
-                    <apexchart id="apex-chart" type=line height=280 :options="chartOptions" :series="series"></apexchart>
-                </div>
-                <v-divider></v-divider>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="red" text @click="dialog = false">Đóng</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-</v-container>
+    <DetailModal v-bind:dialogControl="dialog" v-bind:info="info" v-bind:dataTable="modalData" v-bind:date="date"></DetailModal>
+  </v-container>
 </template>
 
 <script>
 import axios from "axios";
+import DetailModal from "./DetailModal";
 
 export default {
   name: "ReportPressure",
-  created: function() {
-    let that = this;
-    let data = { time: "21/08/2019" };
-    axios({
-      url: "record/fakeflowpressure",
-      data: data,
-      headers: { "Content-Type": "application/json" },
-      method: "POST"
-    })
-      .then(function(res) {
-        that.$data.data = res.data;
-        return res;
-      })
-      .catch(function(err) {
-        console.log(err);
-        return err;
-      });
+  components: {
+    DetailModal
+  },
+  mounted: function() {
+    this.loadData();
   },
 
   data() {
     return {
-      dialog: false,
-      target: "",
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
+      dialog: 0,
+      info: {
+        deviceID: "51",
+        area: "51",
+        name: ""
+      },
       headers: [
         {
           text: "Thời gian",
@@ -142,20 +112,59 @@ export default {
           value: "sum_of_water_out"
         }
       ],
-      data: []
+      data: [],
+      modalData: []
     };
   },
+  watch: {
+    date: function() {
+      this.loadData();
+    }
+  },
   methods: {
-    activeModal(target) {
-      this.$data.target = target;
-      this.$data.dialog = true;
+    activeModal(name, target) {
+      let tempData = this.$data.data;
+      let that = this;
+      var temp = {};
+      var previous = tempData[0][target];
+      that.$data.modalData = [];
+      this.$data.info.name = name;
+      tempData.forEach(element => {
+        temp.time = element.time;
+        temp.value = element[target];
+        temp.diff = element[target] - previous;
+        previous = element[target];
+        that.$data.modalData.push(temp);
+        temp = {};
+      });
+      this.$data.dialog += 1;
+    },
+    loadData() {
+      let that = this;
+      let data = { time: that.$data.date };
+      axios({
+        url: "record/fakeflowpressure",
+        data: data,
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+      })
+        .then(function(res) {
+          that.$data.data = res.data;
+          return res;
+        })
+        .catch(function(err) {
+          console.log(err);
+          return err;
+        });
     }
 };
 </script>
 
 <style scoped>
-#infoSector {
-    margin-left: 3%;
+#menu {
+  padding-top: 10px;
+  margin-left: 10px;
+  max-width: 150px;
 }
 
 #chart {

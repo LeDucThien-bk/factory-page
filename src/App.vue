@@ -72,17 +72,6 @@ export default {
   data() {
     return {
       drawer: null,
-      items: [
-        { title: "Quản lý nhà máy", icon: "account_balance" },
-        {
-          title: "Báo cáo - Biểu đồ",
-          icon: "signal_cellular_alt",
-          subList: [
-            { title: "Áp lực lưu lượng" },
-            { title: "Chi tiết vận hành" }
-          ]
-        }
-      ]
     };
   },
   methods: {
