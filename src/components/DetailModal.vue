@@ -25,7 +25,7 @@
             ></v-text-field>
             <v-text-field
               label="Giá trị tối đa"
-              value="Text here"
+              :value="info.sum"
               outlined
               readonly
               dense
@@ -33,7 +33,7 @@
             ></v-text-field>
             <v-text-field
               label="Trung bình"
-              value="Text here"
+              :value="info.average"
               outlined
               readonly
               dense
