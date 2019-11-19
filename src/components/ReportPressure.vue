@@ -2,22 +2,12 @@
   <v-container>
     <v-card>
       <v-card flat id="menu">
-        <v-menu
-        v-model="menu"
-        :close-on-content-click="false"
-        :nudge-right="40"
-      >
-        <template v-slot:activator="{ on }">
-          <v-text-field
-            v-model="date"
-            label="Chọn ngày"
-            prepend-icon="event"
-            readonly
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker v-model="date" @input="menu = false" locale="vi"></v-date-picker>
-      </v-menu>
+        <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40">
+          <template v-slot:activator="{ on }">
+            <v-text-field v-model="date" label="Chọn ngày" prepend-icon="event" readonly v-on="on"></v-text-field>
+          </template>
+          <v-date-picker v-model="date" @input="menu = false" locale="vi"></v-date-picker>
+        </v-menu>
       </v-card>
       <v-data-table
         :headers="headers"
@@ -28,26 +18,71 @@
       >
         <!-- <template v-slot:header.time="{ header }">
           <v-chip dark>{{ header.text }}</v-chip>
-        </template> -->
+        </template>-->
         <template v-slot:header.flow_pressure="{ header }">
-          <v-chip class="elevation-3" color="info" dark @click="activeModal('Áp lực lưu lượng', 'flow_pressure')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
+          <v-chip
+            class="elevation-3"
+            color="info"
+            dark
+            @click="activeModal('Áp lực lưu lượng', 'flow_pressure')"
+          >
+            {{ header.text }}
+            <i class="material-icons">launch</i>
+          </v-chip>
         </template>
         <template v-slot:header.pump_water_in="{ header }">
-          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm vào', 'pump_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
+          <v-chip
+            class="elevation-3"
+            color="info"
+            dark
+            @click="activeModal('Nước bơm vào', 'pump_water_in')"
+          >
+            {{ header.text }}
+            <i class="material-icons">launch</i>
+          </v-chip>
         </template>
         <template v-slot:header.pump_water_out="{ header }">
-          <v-chip class="elevation-3" color="info" dark @click="activeModal('Nước bơm ra', 'pump_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
+          <v-chip
+            class="elevation-3"
+            color="info"
+            dark
+            @click="activeModal('Nước bơm ra', 'pump_water_out')"
+          >
+            {{ header.text }}
+            <i class="material-icons">launch</i>
+          </v-chip>
         </template>
         <template v-slot:header.sum_of_water_in="{ header }">
-          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước vào', 'sum_of_water_in')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
+          <v-chip
+            class="elevation-3"
+            color="info"
+            dark
+            @click="activeModal('Tổng nước vào', 'sum_of_water_in')"
+          >
+            {{ header.text }}
+            <i class="material-icons">launch</i>
+          </v-chip>
         </template>
         <template v-slot:header.sum_of_water_out="{ header }">
-          <v-chip class="elevation-3" color="info" dark @click="activeModal('Tổng nước ra', 'sum_of_water_out')">{{ header.text }}<i class="material-icons">launch</i></v-chip>
+          <v-chip
+            class="elevation-3"
+            color="info"
+            dark
+            @click="activeModal('Tổng nước ra', 'sum_of_water_out')"
+          >
+            {{ header.text }}
+            <i class="material-icons">launch</i>
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
 
-    <DetailModal v-bind:dialogControl="dialog" v-bind:info="info" v-bind:dataTable="modalData" v-bind:date="date"></DetailModal>
+    <DetailModal
+      v-bind:dialogControl="dialog"
+      v-bind:info="info"
+      v-bind:dataTable="modalData"
+      v-bind:date="date"
+    ></DetailModal>
   </v-container>
 </template>
 
@@ -72,7 +107,8 @@ export default {
       info: {
         deviceID: "51",
         area: "51",
-        name: ""
+        name: "",
+        target: ""
       },
       headers: [
         {
@@ -126,6 +162,7 @@ export default {
       let tempData = this.$data.data;
       let that = this;
       var temp = {};
+      that.$data.info.target = target;
       var previous = tempData[0][target];
       that.$data.modalData = [];
       this.$data.info.name = name;

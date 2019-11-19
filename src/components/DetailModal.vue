@@ -2,7 +2,7 @@
 <template>
   <v-dialog id="mainModal" v-model="dialog">
     <v-card style="overflow-x: hidden;">
-      <v-card-title class="headline grey lighten-2" primary-title>{{ info.name }}  {{ date }}</v-card-title>
+      <v-card-title class="headline info" primary-title>{{ info.name }} {{ date }}</v-card-title>
       <div class="row">
         <div class="col-md-5" id="infoSector">
           <v-card>
@@ -12,7 +12,6 @@
               :value="info.deviceID"
               outlined
               readonly
-              dense
               style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
@@ -20,23 +19,20 @@
               :value="info.area"
               outlined
               readonly
-              dense
               style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
               label="Giá trị tối đa"
-              value="Text here"
+              :value="maxValue"
               outlined
               readonly
-              dense
               style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
               label="Trung bình"
-              value="Text here"
+              :value="averageValue"
               outlined
               readonly
-              dense
               style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
             ></v-text-field>
           </v-card>
@@ -51,7 +47,6 @@
               :items-per-page="5"
               class="elevation-1"
               disable-sort
-              dense
             >
               <template v-slot:item.diff="{ item }">
                 <div v-if="item.diff > 0" id="greenText">{{ item.diff }}</div>
@@ -66,28 +61,24 @@
         <div id="legend"></div>
         <div id="graph1"></div>
       </div>
-
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red" dark @click="dialog = false">Đóng</v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import axios from "axios";
 import Dygraph from "dygraphs";
 
 export default {
   props: {
     dialogControl: Number,
+    field: String,
     date: String,
     info: {
       deviceID: String,
       area: String,
-      name: String
+      name: String,
+      target: String
     },
     dataTable: {
       time: String,
@@ -110,6 +101,8 @@ export default {
   data() {
     return {
       dialog: false,
+      maxValue: 0,
+      averageValue: 0,
       graphData: [],
       headers: [
         {
@@ -125,7 +118,7 @@ export default {
           value: "value"
         },
         {
-          text: "Trạng thái",
+          text: "Tăng/giảm",
           align: "center",
           width: 150,
           value: "diff"
@@ -136,6 +129,36 @@ export default {
   methods: {
     plotGraph: function() {
       let that = this;
+      let data = {
+        "time":
+          this.date[8] +
+          this.date[9] +
+          "/" +
+          this.date[5] +
+          this.date[6] +
+          "/" +
+          this.date[0] +
+          this.date[1] +
+          this.date[2] +
+          this.date[3],
+        "fieldname": this.info.target
+      };
+      axios({
+        url: "record/getfakefield",
+        data: data,
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+      })
+        .then(function(res) {
+          let average = res.data.average + "";    //Force to a string
+          that.$data.maxValue = res.data.max;
+          that.$data.averageValue = average.substring(0, average.indexOf('.') + 3);     //Prevent .333333333333333333333
+          return res;
+        })
+        .catch(function(err) {
+          console.log(err);
+          return err;
+        });
       that.$data.graphData = [];
       var tempDate = new Date();
       var i = 0;
@@ -237,7 +260,7 @@ export default {
   /* margin-top: 2vh; */
   /* position: absolute; */
   width: 95%;
-  height: 40vh;
+  height: 25vh;
   margin-left: 15px;
   color: black;
   margin-bottom: 10px;

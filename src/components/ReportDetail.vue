@@ -72,7 +72,8 @@ export default {
       info: {
         deviceID: "51",
         area: "51",
-        name: ""
+        name: "",
+        target: ""
       },
       headers: [
         {
@@ -126,6 +127,7 @@ export default {
       let tempData = this.$data.data;
       let that = this;
       var temp = {};
+      that.$data.info.target = target;
       var previous = tempData[0][target];
       that.$data.modalData = [];
       this.$data.info.name = name;
