@@ -57,8 +57,9 @@ export default {
             info: {
                 deviceID: "51",
                 area: "51",
-                sum:"",
-                average:"",
+                sum: "",
+                average: "",
+                max: "",
                 name: ""
             },
             headers: [{
@@ -129,8 +130,9 @@ export default {
         },
         loadData() {
             let that = this;
+            let [year, month, day] = that.$data.date.split('-')
             let data = {
-                time: that.$data.date
+                time: `${day}/${month}/${year}`
             };
             axios({
                     url: "record/fakeflowpressure",
@@ -153,11 +155,12 @@ export default {
             let that = this
             that.$data.info.sum = ""
             that.$data.info.average = ""
+            let [year, month, day] = that.$data.date.split('-')
             let data = {
-                time: that.$data.date,
+                time: `${day}/${month}/${year}`,
                 fieldname: that.$data.target
             }
-            console.log(data)
+            // console.log(data)
             axios({
                     url: "record/getfakefield",
                     data: data,
@@ -167,9 +170,9 @@ export default {
                     method: "POST"
                 })
                 .then(function (res) {
-                    console.log(res.data)
-                    that.$data.info.sum = res.data.sum
-                    that.$data.info.average = res.data.average
+                    // console.log(res.data)
+                    that.$data.info.max = res.data.max
+                    that.$data.info.average =  Math.round(res.data.average * 100) / 100  //rounded to 2 decimal places
 
                 })
                 .catch(function (err) {
