@@ -12,8 +12,9 @@
       <v-data-table
         :headers="headers"
         :items="data"
-        :items-per-page="10"
+        :items-per-page="20"
         loading="true"
+        dense
         disable-sort
       >
         <!-- <template v-slot:header.time="{ header }">

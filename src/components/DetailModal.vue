@@ -44,7 +44,8 @@
             <v-data-table
               :headers="headers"
               :items="dataTable"
-              :items-per-page="5"
+              :items-per-page="8"
+              dense
               class="elevation-1"
               disable-sort
             >

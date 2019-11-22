@@ -13,15 +13,6 @@
 
       <!-- Hard-coded list, should be fixed later -->
       <v-list dark>
-        <v-list-item to="/factoryOverwatch">
-          <v-list-item-icon>
-            <v-icon>account_balance</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Giám sát nhà máy</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
         <v-list-group prepend-icon="signal_cellular_alt" no-action>
           <template v-slot:activator>
             <v-list-item-title>Báo cáo - Biểu đồ</v-list-item-title>
@@ -39,12 +30,12 @@
           </v-list-item>
         </v-list-group>
 
-        <v-list-item to="/deviceSetting">
+        <v-list-item @click="openInNewTab('https://factory.aquasoft.vn/')">
           <v-list-item-icon>
-            <v-icon>build</v-icon>
+            <v-icon>account_balance</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title >Cấu hình thiết bị</v-list-item-title>
+            <v-list-item-title>Giám sát nhà máy</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -70,10 +61,14 @@ export default {
 
   data() {
     return {
-      drawer: null,
+      drawer: null
     };
   },
   methods: {
+    openInNewTab(url) {         //Not reliable, depends a lot on browser's settings
+      var win = window.open(url, "_blank");
+      win.focus();
+    }
   }
 };
 </script>

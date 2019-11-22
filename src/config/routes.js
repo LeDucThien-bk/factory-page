@@ -1,26 +1,10 @@
-import factory from '../components/FactoryOverwatch.vue';
-import deviceSetting from '../components/DeviceSettings.vue';
 import reportPressure from '../components/ReportPressure.vue';
 import reportDetail from '../components/ReportDetail.vue';
 
 const routes = [
     {   path: "/",
-        redirect: "/factoryOverwatch"
-    },
-    {   path: "/factoryOverwatch",
-        component: factory,
-        name: 'Giám sát nhà máy',
-        meta: {
-            title: 'Giám sát nhà máy'
-        }
-    },
-    {   path: "/deviceSetting",
-        component: deviceSetting,
-        name: 'Cấu hình thiết bị',
-        meta: {
-            title: 'Cấu hình thiết bị'
-        }
-    },   
+        redirect: "/reportPressure"
+    },  
     {   path: "/reportPressure",
         component: reportPressure,
         name: 'Áp lực lưu lượng',
@@ -35,6 +19,10 @@ const routes = [
             title: 'Chi tiết vận hành'
         }
     },  
+    {
+        path: "*",
+        redirect: "/reportPressure"
+    }
 ]
 
 export default routes;
