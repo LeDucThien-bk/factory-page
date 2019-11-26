@@ -22,7 +22,7 @@
 
         </div>
 
-        <v-data-table :headers="headers" :items="data" :items-per-page="10" loading="true" disable-sort>
+        <v-data-table height="70vh" :headers="headers" :items="data" :items-per-page="10" loading="true" disable-sort>
             <!-- <template v-slot:header.time="{ header }">
           <v-chip dark>{{ header.text }}</v-chip>
         </template> -->
@@ -146,6 +146,7 @@ export default {
         },
         loadData() {
             let that = this;
+            that.$data.data = []
             let [year, month, day] = that.$data.date.split('-')
             let data = {
                 time: `${day}/${month}/${year}`
