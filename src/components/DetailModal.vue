@@ -131,18 +131,8 @@ export default {
     plotGraph: function() {
       let that = this;
       let data = {
-        "time":
-          this.date[8] +
-          this.date[9] +
-          "/" +
-          this.date[5] +
-          this.date[6] +
-          "/" +
-          this.date[0] +
-          this.date[1] +
-          this.date[2] +
-          this.date[3],
-        "fieldname": this.info.target
+        time: this.date,
+        fieldname: this.info.target
       };
       axios({
         url: "record/getfakefield",
@@ -151,9 +141,12 @@ export default {
         method: "POST"
       })
         .then(function(res) {
-          let average = res.data.average + "";    //Force to a string
+          let average = res.data.average + ""; //Force to a string
           that.$data.maxValue = res.data.max;
-          that.$data.averageValue = average.substring(0, average.indexOf('.') + 3);     //Prevent .333333333333333333333
+          that.$data.averageValue = average.substring(
+            0,
+            average.indexOf(".") + 3
+          ); //Prevent .333333333333333333333
           return res;
         })
         .catch(function(err) {
