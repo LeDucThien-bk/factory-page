@@ -1,4 +1,5 @@
 import deviceSetting from '../components/DeviceSettings.vue';
+import chartSetting from '../components/ChartSettings.vue'
 import ReportTable from '../components/ReportTable.vue';
 import Login from '../components/Authenticate/Login.vue';
 import Dashboard from '../components/Dashboard/Dashboard.vue'
@@ -35,6 +36,15 @@ const routes = [{
                 name: 'Cấu hình thiết bị',
                 meta: {
                     title: 'Cấu Hình Thiết Bị'
+                },
+                beforeEnter: ifNotAuthenticated
+            },
+            {
+                path: "chartSetting",
+                component: chartSetting,
+                name: 'Cấu hình biểu đồ',
+                meta: {
+                    title: 'Cấu hình biểu đồ'
                 },
                 beforeEnter: ifNotAuthenticated
             },
