@@ -157,12 +157,14 @@ export default {
         .then(function(res) {
           if (res.data === "success") {
             that.$data.status = "success";
-            that.$data.alert = true;
             that.$data.message = "Cấu hình thành công";
+            that.$data.alert = true;
+            setTimeout(function(){ that.$data.alert = false; }, 3000);
           } else {
             that.$data.status = "error";
-            that.$data.alert = true;
             that.$data.message = "Cấu hình không thành công";
+            that.$data.alert = true;
+            setTimeout(function(){ that.$data.alert = false; }, 3000);
           }
         })
         .catch(function(err) {
