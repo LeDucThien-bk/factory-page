@@ -1,22 +1,22 @@
 <template>
-  <v-app>
-    <v-app-bar app color="#173D6A" height="56px">
-      <v-app-bar-nav-icon id="navbarText" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title id="navbarText">Tổng quan</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-app-bar>
-
-    <v-navigation-drawer app v-model="drawer" fixed color="#173D6A" width="280px">
-      <v-img id="sidebarLogo" :src="require('./assets/logo-sidebar.png')" contain></v-img>
-
-      <v-divider></v-divider>
-
-      <!-- Hard-coded list, should be fixed later -->
-      <v-list dark>
-        <v-list-group prepend-icon="signal_cellular_alt" no-action>
-          <template v-slot:activator>
-            <v-list-item-title>Báo cáo - Biểu đồ</v-list-item-title>
-          </template>
+    <v-app>
+        <v-app-bar app color="#173D6A" height="56px">
+            <v-app-bar-nav-icon id="navbarText" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title id="navbarText">{{navbartitle}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+        </v-app-bar>
+    
+        <v-navigation-drawer app v-model="drawer" fixed color="#173D6A" width="280px">
+            <v-img id="sidebarLogo" :src="require('./assets/logo-sidebar.png')" contain></v-img>
+    
+            <v-divider></v-divider>
+    
+            <!-- Hard-coded list, should be fixed later -->
+            <v-list dark>
+                <v-list-group prepend-icon="signal_cellular_alt" no-action>
+                    <template v-slot:activator>
+                <v-list-item-title>Báo cáo - Biểu đồ</v-list-item-title>
+</template>
 
           <v-list-item to="/reportPressure">
             <v-list-item-content>
@@ -49,44 +49,49 @@
 
 <script>
 export default {
-  name: "App",
+    name: "App",
 
-  components: {},
+    components: {},
 
-  watch: {
-    $route(to) {
-      document.title = to.meta.title || "Quản lý nhà máy";
+    mounted() {
+        this.$data.navbartitle = this.$router.history.current.meta.title;
+    },
+    watch: {
+        $route(to) {
+            document.title = to.meta.title || "Quản lý nhà máy";
+            this.$data.navbartitle = to.meta.title || "Quản lý nhà máy";
+        }
+    },
+
+    data() {
+        return {
+            drawer: null,
+            navbartitle: "",
+        };
+    },
+    methods: {
+        openInNewTab(url) { //Not reliable, depends a lot on browser's settings
+            var win = window.open(url, "_blank");
+            win.focus();
+        }
     }
-  },
-
-  data() {
-    return {
-      drawer: null
-    };
-  },
-  methods: {
-    openInNewTab(url) {         //Not reliable, depends a lot on browser's settings
-      var win = window.open(url, "_blank");
-      win.focus();
-    }
-  }
 };
 </script>
 
 <style scoped>
 #sidebarLogo {
-  margin: 15px;
+    margin: 15px;
 }
 
 #navbarText {
-  color: white;
-  font-weight: bold;
+    color: white;
+    font-weight: bold;
 }
 
 #sidebarWave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  opacity: 0.2;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0.2;
 }
 </style>

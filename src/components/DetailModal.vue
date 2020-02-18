@@ -1,8 +1,13 @@
 /* eslint-disable no-unused-vars */
 <template>
   <v-dialog id="mainModal" v-model="dialog">
+  
     <v-card style="overflow-x: hidden;">
-      <v-card-title class="headline info" primary-title>{{ info.name }} {{ date }}</v-card-title>
+      <v-card-title class="headline info" primary-title>{{ info.name }} {{ date }}
+          <v-btn :fab="true" color="black" :x-small="true" @click="dialog = false" id="buttonclose">
+        <v-icon color="white">mdi-close</v-icon>
+    </v-btn>
+      </v-card-title>
       <div class="row">
         <div class="col-md-5" id="infoSector">
           <v-card>
@@ -23,14 +28,14 @@
             ></v-text-field>
             <v-text-field
               label="Giá trị tối đa"
-              :value="maxValue"
+              :value="info.max"
               outlined
               readonly
               style="width:45%; padding-left:5px; padding-top: 8px; display:inline-block"
             ></v-text-field>
             <v-text-field
               label="Trung bình"
-              :value="averageValue"
+              :value="info.average"
               outlined
               readonly
               style="width:45%; padding-left:10px; padding-top: 8px; display:inline-block"
@@ -42,6 +47,7 @@
           <v-card>
             <!-- <v-card-title>Bảng dữ liệu</v-card-title> -->
             <v-data-table
+              height="20vh"
               :headers="headers"
               :items="dataTable"
               :items-per-page="8"
@@ -79,7 +85,9 @@ export default {
       deviceID: String,
       area: String,
       name: String,
-      target: String
+      target: String,
+      max:Number,
+      average:Number,
     },
     dataTable: {
       time: String,
@@ -269,4 +277,10 @@ export default {
   border: 1px solid grey;
   border-radius: 8px;
 }
+#buttonclose{
+   float: right; 
+   position: absolute;
+   top:10px;
+   right:5px;
+      }
 </style>

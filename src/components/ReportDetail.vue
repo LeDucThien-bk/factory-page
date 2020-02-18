@@ -20,6 +20,7 @@
       </v-menu>
       </v-card>
       <v-data-table
+      height="70vh"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -73,7 +74,10 @@ export default {
         deviceID: "51",
         area: "51",
         name: "",
-        target: ""
+        target: "",
+        max: "",
+        average:""
+
       },
       headers: [
         {
@@ -140,10 +144,12 @@ export default {
         temp = {};
       });
       this.$data.dialog += 1;
+      this.loadDataModal()
     },
     loadData() {
       let that = this;
-      let data = { time: that.$data.date };
+      let [year,month,date] = that.$data.date.split('-')
+      let data = { time: `{$date}/{$month}/{$year}`} ;
       axios({
         url: "record/fakerunningservice",
         data: data,
@@ -158,7 +164,37 @@ export default {
           console.log(err);
           return err;
         });
-    }
+        
+    },
+     loadDataModal() {
+            let that = this
+            that.$data.info.max = ""
+            that.$data.info.average = ""
+            let [year, month, day] = that.$data.date.split('-')
+            let data = {
+                time: `${day}/${month}/${year}`,
+                fieldname: that.$data.info.target
+            }
+            // console.log(data)
+            axios({
+                    url: "record/getfakefield",
+                    data: data,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    method: "POST"
+                })
+                .then(function(res) {
+                    // console.log(res.data)
+                    that.$data.info.max = res.data.max
+                    that.$data.info.average = Math.round(res.data.average * 100) / 100 //rounded to 2 decimal places
+
+                })
+                .catch(function(err) {
+                    console.log(err);
+                    return err;
+                });
+        }
   }
 };
 </script>
